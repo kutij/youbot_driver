@@ -1,7 +1,26 @@
 PROJECT(YouBot_Driver)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 
 OPTION(USE_ROS "Enable ROS as compile tool" OFF)
+
+#################################################
+## Generally used variables for third parties
+SET(3RDPARTY_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/third_parties)
+include(cmake/ThirdPartyHandling.cmake)
+set(THIRD_PARTY_CONFIG Debug;Release)
+set(ONLY_RELEASE Release)
+set(GIT_NAMES GIT Git)
+set(HG_NAMES HG Hg)
+
+########## SOEM ###################
+set(SOEM_COMMAND "git clone https://github.com/kutij/SOEM.git")
+set(SOEM_CACHE_SETTINGS )
+
+third_party_policy(soem ${SOEM_COMMAND} SOEM_CACHE_SETTINGS THIRD_PARTY_CONFIG true GIT_NAMES)
+macro(requires_soem NAME)
+	target_link_libraries (${NAME} soem)
+endmacro(requires_soem)
+
 
 ########### ROS ###########
 SET(ROS_ROOT_PATH $ENV{ROS_ROOT})
